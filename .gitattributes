@@ -1,0 +1,26 @@
+# Default text detection and line-ending normalization
+* text=auto
+
+# Reviewable source and metadata
+*.py       text eol=lf
+*.md       text eol=lf
+*.json     text eol=lf
+*.csv      text eol=lf
+*.ipynb    text eol=lf
+*.svg      text eol=lf
+*.tex      text eol=lf
+*.bib      text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+*.toml     text eol=lf
+
+# Windows launch helpers
+*.bat      text eol=crlf
+*.ps1      text eol=crlf
+
+# Frozen binary evidence and publication assets
+events.out.tfevents.* binary
+*.pt       binary
+*.pdf      binary
+*.png      binary
+*.zip      binary

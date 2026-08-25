@@ -1,0 +1,22 @@
+state,family,method,update_error_pct,censored_high,censored_low,false_zeros,source_cell
+Attention,V_r,AL8,0.154,0,0,0,F7
+Attention,V_r,AL16,0.001,0,0,0,F7
+Attention,V_r,Dyn8,0.434,0,0,0,F7
+MLP,V_r,AL8,0.652,0,0,0,F7
+MLP,V_r,AL16,0.003,0,0,0,F7
+MLP,V_r,Dyn8,4.361,0,0,0,F7
+Embedding,V_r,AL8,1.069,0,0,0,F7
+Embedding,V_r,AL16,0.006,0,0,0,F7
+Embedding,V_r,Dyn8,100.0,1,0,26857,F7
+Attention,C_r,AL8,0.034,0,0,0,F7
+Attention,C_r,AL16,0.0005,0,1,0,F7
+Attention,C_r,Dyn8,0.133,0,0,0,F7
+MLP,C_r,AL8,0.320,0,0,0,F7
+MLP,C_r,AL16,0.001,0,0,0,F7
+MLP,C_r,Dyn8,0.745,0,0,0,F7
+LM head,C_r,AL8,0.470,0,0,0,F7
+LM head,C_r,AL16,0.002,0,0,0,F7
+LM head,C_r,Dyn8,1.402,0,0,0,F7
+Embedding,C_r,AL8,1.162,0,0,0,F7
+Embedding,C_r,AL16,0.006,0,0,0,F7
+Embedding,C_r,Dyn8,100.0,1,0,15461,F7

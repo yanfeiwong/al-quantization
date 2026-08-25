@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-21T04:20:13+00:00",
+  "source_revision": {
+    "available": false
+  },
+  "host": {
+    "os": "Windows-11-10.0.26200-SP0",
+    "system": "Windows",
+    "release": "11",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 151 Stepping 2, GenuineIntel",
+    "python": "3.13.9",
+    "python_implementation": "CPython"
+  },
+  "torch_runtime": {
+    "available": true,
+    "version": "2.12.1+cu132",
+    "built_cuda": "13.2",
+    "cuda_available": true,
+    "deterministic_algorithms": false,
+    "cudnn_version": 92000,
+    "cudnn_deterministic": false,
+    "cudnn_benchmark": false,
+    "cuda_matmul_allow_tf32": false,
+    "cudnn_allow_tf32": true,
+    "devices": [
+      {
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 3090 Ti",
+        "compute_capability": "8.6",
+        "total_memory_bytes": 25756696576
+      }
+    ]
+  },
+  "nvidia_smi": {
+    "available": true,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 3090 Ti",
+        "driver_version": "610.62",
+        "memory_total_mib": "24564"
+      }
+    ]
+  },
+  "toolchain": {
+    "nvcc": null,
+    "nvcc_full": null,
+    "python_compiler": "MSC v.1944 64 bit (AMD64)",
+    "compilers": [
+      {
+        "name": "cl",
+        "version": "���� x64 �� Microsoft (R) C/C++ �Ż������� 19.44.35223 ��"
+      }
+    ]
+  },
+  "packages": [
+    {
+      "name": "adafactor8bit",
+      "version": "0.4.3",
+      "installed": true,
+      "provenance": null
+    },
+    {
+      "name": "torch",
+      "version": "2.12.1+cu132",
+      "installed": true,
+      "provenance": null
+    },
+    {
+      "name": "transformers",
+      "version": "5.13.0",
+      "installed": true,
+      "provenance": null
+    },
+    {
+      "name": "datasets",
+      "version": "4.4.1",
+      "installed": true,
+      "provenance": null
+    },
+    {
+      "name": "accelerate",
+      "version": "1.14.0",
+      "installed": true,
+      "provenance": null
+    },
+    {
+      "name": "bitsandbytes",
+      "version": "0.50.0.dev0",
+      "installed": true,
+      "provenance": {
+        "source": "local wheel: bitsandbytes-1.33.7.preview-py3-none-win_amd64.whl",
+        "kind": "local artifact",
+        "archive_hash": "sha256=8f86ae3b997d27aab835b6ce1e6b749e22ed6fa5755c7a043bb6fe55a06e818d"
+      }
+    },
+    {
+      "name": "flash_attn",
+      "version": "2.8.3",
+      "installed": true,
+      "provenance": {
+        "source": "local wheel: flash_attn-2.8.3-cp313-cp313-win_amd64.whl",
+        "kind": "local artifact",
+        "archive_hash": "sha256=681b9e23b8e94d51065a83a4e86c110a9e53f480ffff80108fff098400e8a6a9"
+      }
+    },
+    {
+      "name": "numpy",
+      "version": "2.4.6",
+      "installed": true,
+      "provenance": null
+    },
+    {
+      "name": "tensorboard",
+      "version": "2.20.0",
+      "installed": true,
+      "provenance": null
+    },
+    {
+      "name": "tokenizers",
+      "version": "0.22.1",
+      "installed": true,
+      "provenance": null
+    },
+    {
+      "name": "safetensors",
+      "version": "0.8.0",
+      "installed": true,
+      "provenance": null
+    },
+    {
+      "name": "huggingface_hub",
+      "version": "1.9.0",
+      "installed": true,
+      "provenance": null
+    },
+    {
+      "name": "ninja",
+      "version": "1.13.0",
+      "installed": true,
+      "provenance": null
+    },
+    {
+      "name": "triton",
+      "installed": false
+    }
+  ],
+  "selected_environment": {}
+}

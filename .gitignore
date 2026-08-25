@@ -1,0 +1,34 @@
+# Python and notebook caches
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+
+# Local environments and editor files
+.venv/
+venv/
+.idea/
+.vscode/
+*.swp
+
+# Temporary outputs and failed-run logs
+tmp/
+*.tmp
+benchmark_failed.log
+scripts/*_failed.log
+
+# Local model and dataset payloads (keep the acquisition notes)
+models/**/*.bin
+models/**/*.safetensors
+models/**/config.json
+models/**/tokenizer*.json
+models/**/vocab.json
+models/**/merges.txt
+data/**/*.arrow
+data/**/*.parquet
+data/**/*.jsonl
+
+# Locally assembled archives and checksum sidecars
+*.zip
+*.sha256

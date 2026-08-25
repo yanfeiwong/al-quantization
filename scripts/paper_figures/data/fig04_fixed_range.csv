@@ -1,0 +1,10 @@
+regime,method,update_error_pct,source_cell
+Narrow,Adaptive AL8,0.039,A1
+Narrow,Fixed -126,4.200,A1
+Narrow,Fixed -40,1.052,A1
+Medium,Adaptive AL8,0.688,A1
+Medium,Fixed -126,5.140,A1
+Medium,Fixed -40,1.574,A1
+Wide,Adaptive AL8,0.704,A1
+Wide,Fixed -126,2.934,A1
+Wide,Fixed -40,44.505,A1
