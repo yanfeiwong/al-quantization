@@ -17,25 +17,25 @@ documentation do not replace the experimental source identity.
 
 ## Artifact freeze fields
 
-Fill these after the first clean commit of this repository, and update them
-again if a release tag or immutable archive is created:
+These fields distinguish the experiment implementation from the later public
+artifact assembly:
 
 - Full experiment commit: `4f544d8b8eebaf50053a4e8a27096e79b049b480`
-- Artifact assembly commit: `TBD after initial artifact commit`
-- Public release tag: `TBD`
-- Artifact DOI or immutable archive URL: `TBD`
-- Working tree clean at archive time: `TBD`
+- Initial artifact assembly commit: `8ed6eede5a1228c7e5347e8f17b96017214a94b6`
+- Public release tag: `not assigned`
+- Artifact DOI or immutable archive URL: `not assigned`
+- Working tree clean at initial archive time: `yes`
 
 The assembly commit should identify the repository containing this file. It
 must not be substituted for the experiment implementation commit above.
 
 ## Numerical reproducibility boundary
 
-Fixed seeds and deterministic library settings control stochastic data/model
-operations where supported. They do not guarantee bitwise equality for custom
-factored CUDA kernels that accumulate row or column statistics with
-`atomicAdd`. CUDA thread scheduling can change floating-point accumulation
-order, producing small backend or run-to-run differences.
+Fixed seeds control stochastic data/model operations where supported. The
+experiment scripts do not enable PyTorch's global deterministic-algorithm
+mode. Custom factored CUDA kernels accumulate row or column statistics with
+`atomicAdd`, so CUDA thread scheduling can change floating-point accumulation
+order and produce small backend or run-to-run differences.
 
 The smoke report therefore distinguishes strict reference-algorithm alignment
 from CUDA numerical consistency. This is a documented implementation property,

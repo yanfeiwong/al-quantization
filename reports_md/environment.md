@@ -41,6 +41,8 @@ Generated (UTC): `2026-08-21T04:20:13+00:00`
 | datasets | 4.4.1 | package index / unspecified |
 | accelerate | 1.14.0 | package index / unspecified |
 | bitsandbytes | 0.50.0.dev0 | local wheel: bitsandbytes-1.33.7.preview-py3-none-win_amd64.whl; sha256=8f86ae3b997d27aab835b6ce1e6b749e22ed6fa5755c7a043bb6fe55a06e818d |
+| came-pytorch | 0.1.3 | package index / unspecified |
+| apollo-torch | 1.0.3 | package index / unspecified |
 | flash_attn | 2.8.3 | local wheel: flash_attn-2.8.3-cp313-cp313-win_amd64.whl; sha256=681b9e23b8e94d51065a83a4e86c110a9e53f480ffff80108fff098400e8a6a9 |
 | numpy | 2.4.6 | package index / unspecified |
 | tensorboard | 2.20.0 | package index / unspecified |
@@ -59,3 +61,4 @@ Generated (UTC): `2026-08-21T04:20:13+00:00`
 - Local installation paths are intentionally omitted. Local wheels are identified by artifact basename and recorded digest when available.
 - Runtime flags above describe the capture process. Experiment scripts remain the source of truth for flags explicitly set during training.
 - This curated report records result-relevant dependencies; it is not a complete dump of every transitive package in the environment.
+- The CAME and APOLLO distribution versions were verified in the unchanged experiment environment during artifact finalization.

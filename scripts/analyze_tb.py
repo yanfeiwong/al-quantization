@@ -352,7 +352,7 @@ def generate_report(summaries, output_path):
         lines.append("### 1.1 Evaluation Perplexity, Convergence & Memory")
         h1 = ["Group", "Algo", "Class", "M-Quant", "V-Quant", "C-Quant", "V-Blk",
               "Final PPL (↓)", "Final Eval Loss (↓)", "Avg Train Loss (↓)", "Late Train Loss (↓)",
-              "Peak Alloc (MB)", "Opt State (MB)", "Throughput (tok/s)"]
+              "Peak Alloc (MiB)", "Opt State (MiB)", "Throughput (tok/s)"]
         lines.append("| " + " | ".join(h1) + " |")
         lines.append("|" + "|".join(["---"] * len(h1)) + "|")
         for s in core_runs:
@@ -601,7 +601,7 @@ def generate_report(summaries, output_path):
     lines.append("- **T-95% (K)**: Steps (in thousands) required to achieve 95% of the total training loss reduction.")
     lines.append("- **Collapse**: Number of runs that experienced divergence (NaN/Inf gradients or zero-loss collapse) out of total runs in the sweep group.")
     lines.append("- **Late Grad Norm CV**: Coefficient of variation of gradient norms in the final 20% of training. Lower indicates smoother late-stage optimization.")
-    lines.append("- **Peak Alloc (MB)**: Maximum memory allocated by PyTorch (`max_allocated_mb`), excluding allocator fragmentation. If a 20K run is missing this data, the value is backfilled from a matching 1K-step proxy run (peak allocation is reached early and remains stable).")
+    lines.append("- **Peak Alloc (MiB)**: Maximum memory allocated by PyTorch (`max_allocated_mb`), excluding allocator fragmentation. If a 20K run is missing this data, the value is backfilled from a matching 1K-step proxy run (peak allocation is reached early and remains stable).")
     lines.append("- **Throughput (tok/s)**: Training tokens per second (`train_tokens_per_second`). Eval overhead is equal across all 20K runs.")
     lines.append("- **Final PPL Delta**: Positive values indicate perplexity degradation relative to the full-precision baseline.")
     lines.append("- **Train MAE vs Base**: Mean absolute error of training loss trajectory compared to the full-precision baseline on common steps.")

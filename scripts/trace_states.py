@@ -44,7 +44,7 @@ M_HIST_BINS = 200
 # Block size for block-wise log-range (matches our optimizer's default)
 V_BLOCK_SIZE = 2048
 
-# Watchdog (same as train_llm.py)
+# Trace-run watchdog settings
 OOM_SHARED_MEM_THRESHOLD_MB = 1024
 WATCHDOG_TIMEOUT_SEC = 300
 MAX_TOTAL_TRAINING_SEC = 106060

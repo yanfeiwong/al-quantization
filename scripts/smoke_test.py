@@ -72,8 +72,8 @@ CKPT_TOL = 1e-3          # Part 6: checkpoint roundtrip loss tolerance
 # 0e: Determinism whitelist
 # CUDA 2D factored paths use atomicAdd in compute_factored_sums_kernel,
 # introducing floating-point non-determinism across runs.
-# Only 1D full-rank paths are guaranteed deterministic on CUDA.
-# Python fallback paths are always deterministic (no atomicAdd).
+# Only 1D full-rank CUDA paths are treated as strict-repeatability paths in
+# this suite. Python fallback paths are tested under the same strict policy.
 DETERMINISM_STRICT = {
     "cuda": ["adamw", "rmsprop"],
     "py":   ["adamw", "adafactor", "rmsprop"],

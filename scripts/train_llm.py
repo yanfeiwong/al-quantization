@@ -22,7 +22,7 @@ OOM_SHARED_MEM_THRESHOLD_MB = 1024
 
 # Dual Watchdog System
 WATCHDOG_TIMEOUT_SEC = 300       # Local: If 20 steps take > 5 mins, system is thrashing in swap.
-MAX_TOTAL_TRAINING_SEC = 10*60*60   # Global: Hard limit of 5 hours per experiment.
+MAX_TOTAL_TRAINING_SEC = 10*60*60   # Global: Hard limit of 10 hours per experiment.
 
 # ==========================================
 # Helper Functions

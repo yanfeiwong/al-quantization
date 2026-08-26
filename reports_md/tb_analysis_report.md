@@ -3,7 +3,7 @@
 
 ## 1. Core Benchmark (20K Steps, TinyLlama-1.1B)
 ### 1.1 Evaluation Perplexity, Convergence & Memory
-| Group | Algo | Class | M-Quant | V-Quant | C-Quant | V-Blk | Final PPL (↓) | Final Eval Loss (↓) | Avg Train Loss (↓) | Late Train Loss (↓) | Peak Alloc (MB) | Opt State (MB) | Throughput (tok/s) |
+| Group | Algo | Class | M-Quant | V-Quant | C-Quant | V-Blk | Final PPL (↓) | Final Eval Loss (↓) | Avg Train Loss (↓) | Late Train Loss (↓) | Peak Alloc (MiB) | Opt State (MiB) | Throughput (tok/s) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | G0 | adamw | torch | - | - | - | - | 72.48 | 4.2833 | 4.6332 | 4.1018 | 21046.0 | 8392.7 | 2502 |
 | G0 | adamw | 8bit_bnb | d8 | bnb_u8 | - | 256 | 73.54 | 4.2979 | 4.6413 | 4.1143 | 10608.6 | 2131.8 | 2640 |
@@ -282,7 +282,7 @@ Values are sampled at approximately 1K-step intervals; evaluation starts at the 
 - **T-95% (K)**: Steps (in thousands) required to achieve 95% of the total training loss reduction.
 - **Collapse**: Number of runs that experienced divergence (NaN/Inf gradients or zero-loss collapse) out of total runs in the sweep group.
 - **Late Grad Norm CV**: Coefficient of variation of gradient norms in the final 20% of training. Lower indicates smoother late-stage optimization.
-- **Peak Alloc (MB)**: Maximum memory allocated by PyTorch (`max_allocated_mb`), excluding allocator fragmentation. If a 20K run is missing this data, the value is backfilled from a matching 1K-step proxy run (peak allocation is reached early and remains stable).
+- **Peak Alloc (MiB)**: Maximum memory allocated by PyTorch (`max_allocated_mb`), excluding allocator fragmentation. If a 20K run is missing this data, the value is backfilled from a matching 1K-step proxy run (peak allocation is reached early and remains stable).
 - **Throughput (tok/s)**: Training tokens per second (`train_tokens_per_second`). Eval overhead is equal across all 20K runs.
 - **Final PPL Delta**: Positive values indicate perplexity degradation relative to the full-precision baseline.
 - **Train MAE vs Base**: Mean absolute error of training loss trajectory compared to the full-precision baseline on common steps.

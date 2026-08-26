@@ -96,6 +96,20 @@
       }
     },
     {
+      "name": "came-pytorch",
+      "version": "0.1.3",
+      "installed": true,
+      "provenance": null,
+      "verification": "Verified in the unchanged experiment environment during artifact finalization."
+    },
+    {
+      "name": "apollo-torch",
+      "version": "1.0.3",
+      "installed": true,
+      "provenance": null,
+      "verification": "Verified in the unchanged experiment environment during artifact finalization."
+    },
+    {
       "name": "flash_attn",
       "version": "2.8.3",
       "installed": true,

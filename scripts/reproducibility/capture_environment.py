@@ -32,6 +32,8 @@ CORE_DISTRIBUTIONS = (
     "datasets",
     "accelerate",
     "bitsandbytes",
+    "came-pytorch",
+    "apollo-torch",
     "flash-attn",
     "numpy",
     "tensorboard",

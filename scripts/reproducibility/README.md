@@ -48,8 +48,7 @@ not use factored accumulation are tested for strict repeatability. Some 2D
 factored CUDA paths compute row and column statistics with `atomicAdd`.
 Floating-point addition is non-associative, and the order in which CUDA threads
 reach an atomic accumulation is not fixed. Repeated runs can therefore differ
-in the last bits even with the same seed and deterministic PyTorch/cuDNN
-settings.
+in the last bits even when library-level deterministic options are enabled.
 
 This effect is not treated as an algorithmic mismatch, but it is not hidden as
 bitwise determinism either. The smoke suite reports two separate policies:
