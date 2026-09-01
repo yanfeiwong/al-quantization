@@ -85,7 +85,7 @@ PANELS = [
             ),
             Curve(
                 "G0_adamw_8bit_bnb_d8_bnb_u8_vblk256",
-                "Dyn8",
+                "bnb 8-bit",
                 BASELINE_COLOR,
                 marker="s",
                 label_y=135.0,

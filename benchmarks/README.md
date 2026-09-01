@@ -1,6 +1,6 @@
 # Benchmark event archive
 
-This directory contains 96 TensorBoard event files used by
+This directory contains 108 TensorBoard event files used by
 `scripts/analyze_tb.py` and `reports_md/tb_analysis_report.md`.
 
 The directory schema is:
@@ -14,6 +14,9 @@ learning-rate multiplier, batch size, and sequence length. The 1K-step runs are
 PyTorch-memory-counter supplements; 10K runs contain learning-rate and batch
 sensitivity; 20K runs provide the main TinyLlama comparisons and evaluation
 trajectories; 100K runs provide the GPT-2 long-horizon comparison.
+The 20K archive additionally repeats the headline G0 AdamW and CAME
+configurations under two additional seeds; `analyze_tb.py` summarizes these
+runs with same-seed differences from the matching full-precision reference.
 
 The public artifact keeps these TensorBoard files byte-for-byte unchanged,
 including TensorBoard's generated hostname and process-ID filename components

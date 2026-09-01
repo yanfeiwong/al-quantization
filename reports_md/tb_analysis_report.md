@@ -1,5 +1,5 @@
 # TensorBoard Analysis Report
-**Runs**: 96 | **Total Compute Time**: 214.7 Hrs
+**Runs**: 108 | **Total Compute Time**: 242.1 Hrs
 
 ## 1. Core Benchmark (20K Steps, TinyLlama-1.1B)
 ### 1.1 Evaluation Perplexity, Convergence & Memory
@@ -84,6 +84,14 @@
 | G0 | apollo | 0.1 | ours_fp32_al8_vblk2048 | 0.46 | 0.0094 |
 | G0 | apollo | 0.1 | ours_uf4_al8_vblk2048 | 0.59 | 0.0105 |
 | G0 | apollo | 0.1 | ours_uf8_al8_vblk2048 | 0.56 | 0.0118 |
+
+### 1.4 Repeated-Run Fidelity (N=3)
+| Path | Quantized Configuration | Paired PPL Δ vs FP32 (mean ± SD) | Train-Trajectory MAE (mean ± SD) |
+|---|---|---|---|
+| adamw | bnb 8-bit | 0.69 ± 0.41 | 0.0094 ± 0.0016 |
+| adamw | UF8+AL8 | 0.29 ± 0.12 | 0.0086 ± 0.0002 |
+| came | UF8+AL8 | 6.74 ± 3.36 | 0.0787 ± 0.0217 |
+| came | UF8+AL16 | -0.15 ± 0.40 | 0.0106 ± 0.0001 |
 
 ## 2. Hyperparameter Sensitivity (10K Sweeps, TinyLlama-1.1B)
 

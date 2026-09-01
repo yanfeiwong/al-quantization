@@ -20,8 +20,20 @@ CLASS_ORDER = {"torch": 0, "hf": 0, "8bit_bnb": 1, "bnb": 1, "ours": 2, "off": 3
 V_QUANT_RANK = {"al8": 0, "al16": 1, "bnb_u8": 2, "-": 3}
 C_QUANT_RANK = {"-": 0, "al8": 0, "al16": 1, "fp32": 2, "bnb_u8": 2}
 
-HP_PATTERN = re.compile(r'_x(?P<lr_mult>[\d\.]+)_bs(?P<batch_size>\d+)_seq(?P<seq_len>\d+)$')
+ORIGINAL_SEED = 921
+HP_PATTERN = re.compile(
+    r'_x(?P<lr_mult>[\d\.]+)_bs(?P<batch_size>\d+)_seq(?P<seq_len>\d+)'
+    r'(?:_seed(?P<seed>\d+))?$'
+)
 STEPS_PATTERN = re.compile(r'(\d+)steps')
+
+REPEATED_RUN_COUNT = 3
+REPEATED_RUN_CONFIGS = (
+    ("adamw", "8bit_bnb", "d8_bnb_u8_vblk256", "bnb 8-bit"),
+    ("adamw", "ours", "uf8_al8_vblk2048", "UF8+AL8"),
+    ("came", "ours", "uf8_al8_vblk2048", "UF8+AL8"),
+    ("came", "ours", "uf8_al16_vblk2048", "UF8+AL16"),
+)
 
 def parse_run_name(run_name):
     hp_match = HP_PATTERN.search(run_name)
@@ -29,6 +41,8 @@ def parse_run_name(run_name):
         return {"run_name": run_name, "algorithm": "unknown", "class": "unknown", "grouping": "Unknown"}
     
     hp_dict = hp_match.groupdict()
+    seed_text = hp_dict.pop("seed")
+    seed = int(seed_text) if seed_text is not None else ORIGINAL_SEED
     prefix = run_name[:hp_match.start()]
     parts = prefix.split('_')
     
@@ -95,6 +109,7 @@ def parse_run_name(run_name):
         "run_name": run_name, "grouping": grouping,
         "algorithm": algo, "class": cls, "variant": variant,
         "m_quant": m_quant, "v_quant": v_quant, "c_quant": c_quant, "v_blk": v_blk,
+        "seed": seed,
         **{k: float(v) if k == "lr_mult" else int(v) for k, v in hp_dict.items()}
     }
 
@@ -302,7 +317,7 @@ def compute_staged_mae(base_run, target_run):
     
     return mae_q1, mae_q2, mae_q3, mae_q4
 
-def find_baseline(summaries, algorithm, lr_mult, intended_steps=None, batch_size=None):
+def find_baseline(summaries, algorithm, lr_mult, intended_steps=None, batch_size=None, seed=None):
     """Find the full-precision baseline for a given algorithm."""
     candidates = [
         s for s in summaries
@@ -311,8 +326,31 @@ def find_baseline(summaries, algorithm, lr_mult, intended_steps=None, batch_size
         and float(s.get('lr_mult', 0)) == float(lr_mult)
         and (intended_steps is None or s.get('intended_steps') == intended_steps)
         and (batch_size is None or int(s.get('batch_size', 0)) == int(batch_size))
+        and (seed is None or s.get('seed') == seed)
     ]
     return candidates[0] if candidates else None
+
+def mean_sd(values, decimals):
+    values = [value for value in values if value is not None]
+    if not values:
+        return "-"
+    if len(values) == 1:
+        return fmt(values[0], decimals)
+    return f"{np.mean(values):.{decimals}f} ± {np.std(values, ddof=1):.{decimals}f}"
+
+def multi_seed_runs(summaries, algorithm, cls, variant):
+    return [
+        s for s in summaries
+        if s.get('intended_steps') == 20000
+        and s.get('grouping') == "G0"
+        and s.get('algorithm') == algorithm
+        and s.get('class') == cls
+        and s.get('variant', '') == variant
+        and float(s.get('lr_mult', 0)) == 0.1
+        and int(s.get('batch_size', 0)) == 4
+        and int(s.get('seq_len', 0)) == 512
+        and s.get('final_ppl') is not None
+    ]
 
 def generate_report(summaries, output_path):
     summaries = [s for s in summaries if s is not None]
@@ -334,6 +372,7 @@ def generate_report(summaries, output_path):
                 intended_steps, run_name)
         
     summaries.sort(key=sort_key)
+    original_summaries = [s for s in summaries if s.get('seed') == ORIGINAL_SEED]
     
     total_runtime = sum(s.get('runtime_hrs', 0.0) for s in summaries)
     lines = [
@@ -344,7 +383,7 @@ def generate_report(summaries, output_path):
     # ==========================================
     # Section 1: Core Benchmark (20K Steps)
     # ==========================================
-    core_runs = [s for s in summaries if s['intended_steps'] == 20000]
+    core_runs = [s for s in original_summaries if s['intended_steps'] == 20000]
     if core_runs:
         lines.append("## 1. Core Benchmark (20K Steps, TinyLlama-1.1B)")
         
@@ -359,7 +398,7 @@ def generate_report(summaries, output_path):
             # Fallback for Peak Alloc: use 1K proxy run if 20K run is missing it
             peak = s['peak_alloc_mb']
             if peak is None:
-                proxy = next((p for p in summaries 
+                proxy = next((p for p in original_summaries
                               if p['intended_steps'] == 1000
                               and p['algorithm'] == s['algorithm']
                               and p['grouping'] == s['grouping']
@@ -394,7 +433,7 @@ def generate_report(summaries, output_path):
         lines.append("|---|---|---|---|---|---|")
         
         target_groups = defaultdict(list)
-        for s in summaries: 
+        for s in original_summaries:
             if s['intended_steps'] == 20000 and s['class'] not in ['torch', 'hf']:
                 target_groups[(s['grouping'], s['algorithm'], s['lr_mult'], s['seq_len'])].append(s)
         
@@ -402,7 +441,7 @@ def generate_report(summaries, output_path):
             grp, algo, lr, seq = key
             
             for tgt in targets:
-                base = find_baseline(summaries, algo, lr, intended_steps=20000, batch_size=tgt['batch_size'])
+                base = find_baseline(original_summaries, algo, lr, intended_steps=20000, batch_size=tgt['batch_size'])
                 if base:
                     base_ppl = base.get('final_ppl')
                     tgt_ppl = tgt.get('final_ppl')
@@ -416,10 +455,40 @@ def generate_report(summaries, output_path):
                 tgt_name = f"{tgt['class']}" + (f"_{tgt['variant']}" if tgt['variant'] else "")
                 lines.append(f"| {grp} | {algo} | {lr} | {tgt_name} | {fmt(delta, 2)} | {mae} |")
 
+        repeated_run_rows = []
+        for algo, cls, variant, label in REPEATED_RUN_CONFIGS:
+            runs = multi_seed_runs(summaries, algo, cls, variant)
+            deltas = []
+            maes = []
+            for run in runs:
+                base = find_baseline(
+                    summaries, algo, run['lr_mult'], intended_steps=20000,
+                    batch_size=run['batch_size'], seed=run['seed']
+                )
+                if base is None or base.get('final_ppl') is None or run.get('final_ppl') is None:
+                    continue
+                deltas.append(run['final_ppl'] - base['final_ppl'])
+                mae = compute_train_mae(base, run)
+                if mae is not None:
+                    maes.append(mae)
+
+            if len(deltas) != REPEATED_RUN_COUNT or len(maes) != REPEATED_RUN_COUNT:
+                continue
+            repeated_run_rows.append((
+                algo, label, mean_sd(deltas, 2), mean_sd(maes, 4),
+            ))
+
+        if repeated_run_rows:
+            lines.append(f"\n### 1.4 Repeated-Run Fidelity (N={REPEATED_RUN_COUNT})")
+            lines.append("| Path | Quantized Configuration | Paired PPL Δ vs FP32 (mean ± SD) | Train-Trajectory MAE (mean ± SD) |")
+            lines.append("|---|---|---|---|")
+            for algo, label, delta, mae in repeated_run_rows:
+                lines.append(f"| {algo} | {label} | {delta} | {mae} |")
+
     # ==========================================
     # Section 2: Hyperparameter Sensitivity (10K Sweeps)
     # ==========================================
-    sweep_runs = [s for s in summaries if s['intended_steps'] == 10000]
+    sweep_runs = [s for s in original_summaries if s['intended_steps'] == 10000]
     if sweep_runs:
         lines.append("\n## 2. Hyperparameter Sensitivity (10K Sweeps, TinyLlama-1.1B)")
         
@@ -476,7 +545,7 @@ def generate_report(summaries, output_path):
                         elif tgt_run['is_collapsed']:
                             mae_cols.append(f"NaN(step={tgt_run['collapse_step']})")
                         else:
-                            base = find_baseline(summaries, algo, lr_target, intended_steps=10000, batch_size=bs)
+                            base = find_baseline(original_summaries, algo, lr_target, intended_steps=10000, batch_size=bs)
                             mae_val = compute_train_mae(base, tgt_run) if base else None
                             mae_cols.append(mae_val)
                 
@@ -516,7 +585,7 @@ def generate_report(summaries, output_path):
                     elif s['is_collapsed']:
                         mae_str = f"NaN(step={s['collapse_step']})"
                     else:
-                        base = find_baseline(summaries, algo, lr, intended_steps=10000, batch_size=s['batch_size'])
+                        base = find_baseline(original_summaries, algo, lr, intended_steps=10000, batch_size=s['batch_size'])
                         mae_val = compute_train_mae(base, s) if base else None
                         mae_str = fmt(mae_val, 4) if mae_val is not None else "No baseline"
                     
@@ -536,7 +605,7 @@ def generate_report(summaries, output_path):
     # ==========================================
     # Section 3: Long-Horizon Training (100K Steps)
     # ==========================================
-    long_runs = [s for s in summaries if s['intended_steps'] >= 50000]
+    long_runs = [s for s in original_summaries if s['intended_steps'] >= 50000]
     if long_runs:
         lines.append("\n## 3. Long-Horizon Training (100K Steps, GPT2-124M)")
         
@@ -582,7 +651,7 @@ def generate_report(summaries, output_path):
     # ==========================================
     lines.append("\n## 4. Sampled Trajectories (20K Steps, TinyLlama-1.1B)")
     lines.append("Values are sampled at approximately 1K-step intervals; evaluation starts at the first available checkpoint.")
-    for s in summaries:
+    for s in original_summaries:
         if s['intended_steps'] == 20000:
             name = f"{s['grouping']}_{s['algorithm']}_{s['class']}" + (f"_{s['variant']}" if s['variant'] else "")
             lines.append(f"\n**{name} (x{s['lr_mult']}, bs{s['batch_size']})**")

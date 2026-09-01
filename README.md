@@ -14,7 +14,7 @@ sources are intentionally outside this artifact repository.
 
 | Path | Contents |
 |---|---|
-| `benchmarks/` | 96 TensorBoard event files for the reported 1K, 10K, 20K, and 100K runs |
+| `benchmarks/` | 108 TensorBoard event files for the reported 1K, 10K, 20K, and 100K runs |
 | `state_traces/` | 52 statistics-only PyTorch snapshots and four matching TensorBoard event files |
 | `theory_and_ablation_final.ipynb` | Executed controlled fidelity and ablation notebook |
 | `scripts/` | Training, tracing, analysis, validation, and figure-generation code |

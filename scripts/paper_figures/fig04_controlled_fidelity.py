@@ -242,7 +242,7 @@ def draw_sensitivity(ax, rows: list[dict[str, str]]) -> None:
         Line2D([], [], marker="D", linestyle="none", markersize=3.6,
                markerfacecolor=WHITE, markeredgecolor=AL16_COLOR, label="AL16"),
         Line2D([], [], marker="s", linestyle="none", markersize=4.0,
-               markerfacecolor=DYN8_COLOR, markeredgecolor=DYN8_COLOR, label="Dyn8"),
+               markerfacecolor=DYN8_COLOR, markeredgecolor=DYN8_COLOR, label="bnb 8-bit"),
     ]
     ax.legend(
         handles=handles,
@@ -331,7 +331,7 @@ def draw_pareto(ax, rows: list[dict[str, str]]) -> None:
             linewidth=1.05,
             marker=marker,
             markersize=3.5,
-            label=method,
+            label=("bnb 8-bit" if method == "Dyn8" else method),
             zorder=3,
         )
         annotation_offsets = {
