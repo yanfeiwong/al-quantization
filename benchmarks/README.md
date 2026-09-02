@@ -1,6 +1,6 @@
 # Benchmark event archive
 
-This directory contains 108 TensorBoard event files used by
+This directory contains 111 TensorBoard event files used by
 `scripts/analyze_tb.py` and `reports_md/tb_analysis_report.md`.
 
 The directory schema is:
@@ -40,3 +40,6 @@ is not used for cross-run comparisons. The paper reports `Peak Alloc` from
 `mem_torch/max_allocated_mb` (`torch.cuda.max_memory_allocated()`); missing 20K
 baseline counters are filled from the matching 1K supplement runs.
 Optimizer-state memory is computed separately from live CUDA tensors.
+For the three APOLLO `ours` configurations, matching v0.4.4 1K supplements
+refresh `Peak Alloc` and optimizer-state memory after removal of an unconsumed
+legacy buffer; their reported training metrics remain from the v0.4.3 20K runs.

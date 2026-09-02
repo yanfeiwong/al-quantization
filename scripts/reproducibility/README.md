@@ -33,6 +33,8 @@ The analyzed paper experiments currently use implementation commit
 `4f544d8b8eebaf50053a4e8a27096e79b049b480` (Adafactor8Bit v0.4.3) as
 their verified source anchor. This is the revision that introduced independent
 confidence-state quantization through `conf_quant_type`.
+Three 1K APOLLO memory-accounting supplements use v0.4.4; they update only the
+reported memory counters and do not replace the v0.4.3 training runs.
 
 Later commits that only change author metadata, documentation, manuscript
 sources, or figure-generation scripts do not replace the experiment anchor.

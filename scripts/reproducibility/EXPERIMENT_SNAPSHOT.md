@@ -15,6 +15,11 @@ This is the implementation lineage used by the analyzed experiments. Later
 commits that change README content, links, author-name presentation, or other
 documentation do not replace the experimental source identity.
 
+Three 1K APOLLO memory-accounting supplements use the released v0.4.4 package
+after removal of an unconsumed legacy buffer. These runs supply only `Peak
+Alloc` and optimizer-state memory; quality and throughput remain tied to the
+v0.4.3 runs above.
+
 ## Artifact freeze fields
 
 These fields distinguish the experiment implementation from the later public

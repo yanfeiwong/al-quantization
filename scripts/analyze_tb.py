@@ -35,6 +35,15 @@ REPEATED_RUN_CONFIGS = (
     ("came", "ours", "uf8_al16_vblk2048", "UF8+AL16"),
 )
 
+# v0.4.4 removes an unconsumed legacy APOLLO buffer. These matching 1K
+# supplements refresh memory accounting only; training metrics remain tied to
+# the original 20K runs.
+MEMORY_PROXY_CONFIGS = {
+    ("apollo", "ours", "fp32_al8_vblk2048"),
+    ("apollo", "ours", "uf4_al8_vblk2048"),
+    ("apollo", "ours", "uf8_al8_vblk2048"),
+}
+
 def parse_run_name(run_name):
     hp_match = HP_PATTERN.search(run_name)
     if not hp_match:
@@ -352,6 +361,30 @@ def multi_seed_runs(summaries, algorithm, cls, variant):
         and s.get('final_ppl') is not None
     ]
 
+def find_memory_proxy(summaries, target_run):
+    key = (
+        target_run.get('algorithm'),
+        target_run.get('class'),
+        target_run.get('variant', ''),
+    )
+    if key not in MEMORY_PROXY_CONFIGS:
+        return None
+
+    return next((
+        run for run in summaries
+        if run.get('intended_steps') == 1000
+        and run.get('grouping') == target_run.get('grouping')
+        and run.get('algorithm') == target_run.get('algorithm')
+        and run.get('class') == target_run.get('class')
+        and run.get('variant', '') == target_run.get('variant', '')
+        and float(run.get('lr_mult', 0)) == float(target_run.get('lr_mult', 0))
+        and int(run.get('batch_size', 0)) == int(target_run.get('batch_size', 0))
+        and int(run.get('seq_len', 0)) == int(target_run.get('seq_len', 0))
+        and run.get('seed') == target_run.get('seed')
+        and run.get('peak_alloc_mb') is not None
+        and run.get('opt_mem_mb') is not None
+    ), None)
+
 def generate_report(summaries, output_path):
     summaries = [s for s in summaries if s is not None]
     
@@ -395,8 +428,10 @@ def generate_report(summaries, output_path):
         lines.append("| " + " | ".join(h1) + " |")
         lines.append("|" + "|".join(["---"] * len(h1)) + "|")
         for s in core_runs:
+            memory_proxy = find_memory_proxy(original_summaries, s)
+
             # Fallback for Peak Alloc: use 1K proxy run if 20K run is missing it
-            peak = s['peak_alloc_mb']
+            peak = memory_proxy['peak_alloc_mb'] if memory_proxy else s['peak_alloc_mb']
             if peak is None:
                 proxy = next((p for p in original_summaries
                               if p['intended_steps'] == 1000
@@ -408,12 +443,20 @@ def generate_report(summaries, output_path):
                 if proxy:
                     peak = proxy['peak_alloc_mb']
 
+            opt_mem = memory_proxy['opt_mem_mb'] if memory_proxy else s['opt_mem_mb']
+
             row = [s['grouping'], s['algorithm'], s['class'], s['m_quant'], s['v_quant'], s['c_quant'], s['v_blk'],
                    fmt(s['final_ppl']), fmt(s['final_eval_loss'], 4),
                    fmt(s['avg_train_loss'], 4), fmt(s['late_train_loss'], 4),
-                   fmt(peak, 1), fmt(s['opt_mem_mb'], 1),
+                   fmt(peak, 1), fmt(opt_mem, 1),
                    fmt(s['tokens_per_sec'], 0)]
             lines.append("| " + " | ".join(map(str, row)) + " |")
+
+        lines.append(
+            "\nAPOLLO `ours` memory columns use matching 1K measurements from "
+            "v0.4.4 after removal of an unconsumed legacy buffer; training-quality "
+            "and throughput columns remain from the original 20K v0.4.3 runs."
+        )
 
         # 1.2 Convergence Dynamics
         lines.append("\n### 1.2 Convergence Dynamics")

@@ -15,7 +15,7 @@ identified by `benchmarks/` and summarized in `reports_md/tb_analysis_report.md`
 | `run_benchmark_llm_pretrain_2.py` | 20K-step TinyLlama core and ablation runs with validation every 1K steps |
 | `run_benchmark_llm_pretrain_3.py` | 100K-step GPT-2 long-horizon runs at batch size 16 |
 | `run_benchmark_llm_pretrain_seed_sup.py` | Repeats the headline G0 AdamW and CAME 20K-step configurations under two additional seeds |
-| `run_benchmark_llm_pretrain_vram_sup.py` | 1K-step baseline reruns that recollect PyTorch peak-allocation counters for runs whose earlier Windows adapter-memory observations were unsuitable |
+| `run_benchmark_llm_pretrain_vram_sup.py` | 1K-step memory-counter supplements for matching baseline and APOLLO configurations |
 | `run_trace.py` / `trace_states.py` | 10K-step state-statistics capture used for the range and exact-zero analysis |
 | `train_llm.py` | Shared training entry point and TensorBoard logging |
 

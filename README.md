@@ -14,7 +14,7 @@ sources are intentionally outside this artifact repository.
 
 | Path | Contents |
 |---|---|
-| `benchmarks/` | 108 TensorBoard event files for the reported 1K, 10K, 20K, and 100K runs |
+| `benchmarks/` | 111 TensorBoard event files for the reported 1K, 10K, 20K, and 100K runs |
 | `state_traces/` | 52 statistics-only PyTorch snapshots and four matching TensorBoard event files |
 | `theory_and_ablation_final.ipynb` | Executed controlled fidelity and ablation notebook |
 | `scripts/` | Training, tracing, analysis, validation, and figure-generation code |
@@ -33,6 +33,8 @@ The reported experiments use **Adafactor8Bit v0.4.3** at implementation commit
 [`4f544d8b8eebaf50053a4e8a27096e79b049b480`](https://github.com/yanfeiwong/adafactor-8bit/commit/4f544d8b8eebaf50053a4e8a27096e79b049b480).
 Later README or author-metadata commits in the implementation repository do not
 change this experimental anchor.
+Three 1K APOLLO memory-accounting supplements use v0.4.4 after removal of an
+unconsumed legacy buffer; they do not replace the frozen v0.4.3 training runs.
 
 The captured software, CUDA, compiler, and GPU environment is recorded in
 [`reports_md/environment.md`](reports_md/environment.md). The experiments were

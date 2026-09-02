@@ -1,5 +1,5 @@
 # TensorBoard Analysis Report
-**Runs**: 108 | **Total Compute Time**: 242.1 Hrs
+**Runs**: 111 | **Total Compute Time**: 242.5 Hrs
 
 ## 1. Core Benchmark (20K Steps, TinyLlama-1.1B)
 ### 1.1 Evaluation Perplexity, Convergence & Memory
@@ -27,9 +27,11 @@
 | G1 | adafactor | ours | - | al8 | - | 256 | 78.15 | 4.3586 | 4.8017 | 4.2020 | 8999.2 | 1.4 | 2708 |
 | G1 | adafactor | ours | - | al8 | - | 2048 | 78.29 | 4.3605 | 4.8026 | 4.2038 | 8999.3 | 1.5 | 2698 |
 | G0 | apollo | torch | - | - | - | - | 74.68 | 4.3132 | 4.6991 | 4.1261 | 11560.2 | 2078.7 | 2331 |
-| G0 | apollo | ours | fp32 | al8 | - | 2048 | 75.14 | 4.3194 | 4.7080 | 4.1352 | 14952.4 | 5227.5 | 2019 |
-| G0 | apollo | ours | uf4 | al8 | - | 2048 | 75.27 | 4.3211 | 4.7086 | 4.1425 | 9706.2 | 1121.3 | 2080 |
-| G0 | apollo | ours | uf8 | al8 | - | 2048 | 75.24 | 4.3206 | 4.7105 | 4.1383 | 10290.9 | 1694.7 | 2077 |
+| G0 | apollo | ours | fp32 | al8 | - | 2048 | 75.14 | 4.3194 | 4.7080 | 4.1352 | 11241.3 | 1531.5 | 2019 |
+| G0 | apollo | ours | uf4 | al8 | - | 2048 | 75.27 | 4.3211 | 4.7086 | 4.1425 | 9206.1 | 630.5 | 2080 |
+| G0 | apollo | ours | uf8 | al8 | - | 2048 | 75.24 | 4.3206 | 4.7105 | 4.1383 | 9338.2 | 756.3 | 2077 |
+
+APOLLO `ours` memory columns use matching 1K measurements from v0.4.4 after removal of an unconsumed legacy buffer; training-quality and throughput columns remain from the original 20K v0.4.3 runs.
 
 ### 1.2 Convergence Dynamics
 | Group | Algo | Class | Variant | LR Mult | AUC (↓) | T-95% (K) | Volatility | Spike Freq | Collapse |
